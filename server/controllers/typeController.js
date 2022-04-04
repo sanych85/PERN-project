@@ -7,7 +7,9 @@ const createTypes = async(req,res)=> {
 }
 
 const getAllTypes = async(req,res)=> {
-
+    const types = await Type.findAll()
+   
+    res.send(types)
 }
 
 

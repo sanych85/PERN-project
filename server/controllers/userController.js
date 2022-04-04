@@ -1,23 +1,56 @@
-const ApiError = require("../error/ApiError")
+const ApiError = require('../error/ApiError');
+const bcrypt = require('bcrypt');
+const { User, Basket } = require('../models/models');
+const jwt = require('jsonwebtoken');
 
-const registration = async (req,res)=> {
-    console.log('in regi')
-    res.send('registration')
-}
 
-const login = async (req,res)=> {
+const generateJwt = (id, email, role) => {
+  return jwt.sign({ id, email, role }, process.env.SECRET_KEY, {
+    expiresIn: '24h',
+  });
+};
 
-}
+const registration = async (req, res, next) => {
+  console.log('in registration');
+  const { email, password, role } = req.body;
+  if (!email || !password) {
+    return next(ApiError.badRequest('Unvalid email or password'));
+  }
+  console.log(email, 'email');
+  console.log(password, 'password');
+  const candidate = await User.findOne({ where: { email } });
+  console.log('candidate, ', candidate);
+  if (candidate) {
+    return next(ApiError.badRequest('User with this email is alreay exist'));
+  }
+  const hashPassword = await bcrypt.hash(password, 5);
+  const user = await User.create({ email, role, password: hashPassword });
+  const basket = await Basket.create({ userId: user.id });
+  const token = generateJwt(user.id, email, role);
+  return res.json({ token });
+};
 
-const check = async (req,res, next)=> {
-    console.log("in check")
-    const {id} =req.query
-    console.log(id,"id")
-    if(!id) {
-        return next(ApiError.badRequest('There is no id',"cccccccccccc"))
-    }
-   
-    res.json({id})
-}
+const login = async (req, res, next) => {
+  const { email, password } = req.body;
+  const user = await User.findOne({ where: { email } });
+//   console.log(user, "user")
+  if (!user) {
+    return next(ApiError.internal(' user with name id not exist'));
+  }
+  console.log(password, "password")
+  console.log(user.password, "user.password")
+  let comparePassword =  bcrypt.compareSync(password, user.password);
+  console.log(comparePassword, "comparePassword")
+  if (!comparePassword) {
+    return next(ApiError.internal('Something went wrong'));
+  }
+  const token = generateJwt(user.id, email, user.role);
+  return res.json({token});
+};
+const check = async (req, res, next) => {
 
-module.exports = {registration, login, check}
+    const token = generateJwt(req.user.id, req.email, req.user.role);
+    return res.json({token})
+};
+
+module.exports = { registration, login, check };
