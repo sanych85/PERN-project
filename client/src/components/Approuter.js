@@ -7,8 +7,7 @@ import { Context } from '..';
 import NavBar from './Navbar';
 const AppRouter = () => {
   const {user} = useContext(Context)
-  console.log(user.isAuth, "user")
-  console.log(user.isAuth, "user")
+
   return (
     <Routes>
   
