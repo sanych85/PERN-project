@@ -7,9 +7,8 @@ import DeviceStore from './store/deviceStore';
 import UserStore from './store/userStore';
 const rootElement = document.getElementById("root");
 const root = createRoot(rootElement);
-
 export const Context = createContext(null)
-
+console.log(process.env.REACT_APP_API_URL)
 root.render(
   <StrictMode>
     <Context.Provider value = {{

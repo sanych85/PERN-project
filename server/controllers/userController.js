@@ -14,7 +14,7 @@ const registration = async (req, res, next) => {
   console.log('in registration');
   const { email, password, role } = req.body;
   if (!email || !password) {
-    return next(ApiError.badRequest('Unvalid email or password'));
+    return next(ApiError.badRequest('Invalid email or password'));
   }
   console.log(email, 'email');
   console.log(password, 'password');
@@ -31,6 +31,7 @@ const registration = async (req, res, next) => {
 };
 
 const login = async (req, res, next) => {
+  console.log("we are in login now")
   const { email, password } = req.body;
   const user = await User.findOne({ where: { email } });
 //   console.log(user, "user")
