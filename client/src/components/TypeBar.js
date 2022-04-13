@@ -4,7 +4,7 @@ import { Context } from '..';
 import { ListGroup, ListGroupItem } from 'react-bootstrap';
 const TypeBar = observer(() => {
   const {device}  = useContext(Context);
-
+ console.log(device.types, "device type")
   return (
     <ListGroup>
       {device.types.map((type) => (

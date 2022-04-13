@@ -1,23 +1,35 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Card, Col, Container, Image, Row } from 'react-bootstrap';
 import star from '../assets/1088px-Five-pointed_star.svg.png';
+import  {useParams} from "react-router-dom"
+import { fetchOneDevice } from '../http/deviceApi';
+import { observer } from 'mobx-react-lite';
 const DevicePAge = () => {
-  const device = { id: 7, name: 'Note', price: 14000, rating: 3.5, img: '' };
-  const description = [
-    { id: 1, title: 'Оперативная память', description: '5 гб' },
-    { id: 2, title: 'Камера', description: '12мп' },
-    { id: 3, title: 'Процессор', description: 'Пентиум 3' },
-    { id: 4, title: 'Кол-во ядер', description: '2' },
-  ];
+  const [device, setDevice] = useState({})
+  const [render, setRender ] = useState(false)
+  const {id}= useParams()
+  console.log(id)
+  useEffect(()=> {
+    fetchOneDevice(id).then(data=>{
+      setDevice(data)
+      setRender(true)
+    })
+    console.log('in use effect')
+    console.log(render)
+  },[render])
+  
+  console.log(device)
   return (
-    <Container className="mt-3">
-      <Row>
+    <>
+      {Object.keys(device).length !== 0?
+        <Container className="mt-3">
+        <Row>
         <Col md={4}>
-          <Image width={300} height={300} src={device.img} />
+          <Image width={300} height={300} src={process.env.REACT_APP_API_URL + device.device.img} />
         </Col>
         <Col md={4}>
           <Row className="d-flex flex-column align-items-center justify-content-center">
-            <h2>{device.name}</h2>
+            <h2>{device.device.name}</h2>
             <div
               className="d-flex align-items-center justify-content-center"
               style={{
@@ -27,7 +39,7 @@ const DevicePAge = () => {
                 backgroundSize: 'cover',
                 fontSize: 64,
               }}>
-              {device.rating}
+              {device.device.rating}
             </div>
           </Row>
         </Col>
@@ -40,20 +52,23 @@ const DevicePAge = () => {
               fontSize: 32,
               border: '5px solid lightgray',
             }}>
-            <h3>Оn:{device.price} руб</h3>
+            <h3>Оn:{device.device.price} руб</h3>
             <Button variant={'outline-dark'}>Добавить в корзину</Button>
           </Card>
         </Col>
       </Row>
       <Row className = "d-flex flex-column m-3">
         <h1>Характеристики</h1>
-        {description.map((info, index) => (
+        {device.device.info.map((info, index) => (
           <Row key = {info.id} style = {{background:index%2 ===0?'lightgray':'transparrent', padding:10}}>
             {info.title}:{info.description}
           </Row>
         ))}
       </Row>
     </Container>
+    
+    :<>Ничего</>}
+    </>  
   );
 };
 

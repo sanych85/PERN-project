@@ -13,7 +13,7 @@ const AppRouter = () => {
   
       {user.isAuth &&
         authRoutes.map(({ path, component }) => {
-            console.log(component, "component")
+  
           return (
             <Route key={path} path={path} element={component} exact></Route>
           );

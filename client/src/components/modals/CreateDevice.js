@@ -6,7 +6,7 @@ import { Context } from '../..';
 const CreateDevice = ({ show, onHide }) => {
   const { device } = useContext(Context);
   const [info, setInfo ] = useState([]);
-  console.log('info', info)
+
   const addInfo = () => {
     setInfo([...info, { title: '', description: '', number: Date.now() }]);
   };

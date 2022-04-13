@@ -16,19 +16,20 @@ const Auth = observer(() => {
   const click = async () => {
     try {
       let data;
-      console.log(isLogin, "isLogin")
+     
       if (isLogin) {
         data = await login(email, password);
-        console.log(data, "data");
+       
       } else {
         data = await registration(email, password);
-        console.log(registration);
+      
       }
       user.setUser(user);
       user.setIsAuth(true);
+      localStorage.setItem('token', data)
       navigate(SHOP_ROUTE)
     } catch (err) {
-      console.log("in alert")
+      
       alert(err.response.data.message);
     }
   };

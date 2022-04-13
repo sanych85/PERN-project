@@ -11,9 +11,9 @@ module.exports = function (role) {
       if (!token) {
         res.status(401).json({ message: 'unauthorized' });
       }
-      console.log(token, 'token');
+    
       const decoded = jwt.verify(token, process.env.SECRET_KEY);
-      console.log(decoded, "decoded")
+      
       if (decoded.role !== "Admin") {
         return res.status(403).json({ message: 'You dont have access' });
       }

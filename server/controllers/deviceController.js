@@ -5,7 +5,7 @@ const ApiError = require('../error/ApiError');
 const { info } = require('console');
 const createDevice = async (req, res, next) => {
   try {
-    console.log('in try');
+  
     const { name, price, brandId, typeId, info } = req.body;
     const { img } = req.files;
     let filename = uuid.v4() + '.jpg';
@@ -40,7 +40,7 @@ const getAllDevices = async (req, res) => {
   limit = limit || 9;
   let offset = page * limit - limit;
   let devices;
-  console.log('limit', limit);
+ 
   if (!brandId && !typeId) {
     devices = await Device.findAndCountAll({ limit, offset });
   }
