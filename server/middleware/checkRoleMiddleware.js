@@ -14,10 +14,11 @@ module.exports = function (role) {
     
       const decoded = jwt.verify(token, process.env.SECRET_KEY);
       
-      if (decoded.role !== "Admin") {
+      if (decoded.role !== "ADMIN") {
         return res.status(403).json({ message: 'You dont have access' });
       }
       req.user = decoded;
+      console.log('THATS OK')
       next();
     } catch (err) {
       res.status(401).json({ message: 'user is unauthorized' });
